@@ -12,7 +12,6 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x64, x86]
 
     runs-on: windows-latest  # For a list of available runner types, refer to 
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -31,11 +30,8 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /bl:logfile=restore.$env:Configuration.$env:Platform.binlog /t:Restore /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:RuntimeIdentifiers=`"win-x64`;win-x86`;win10-x64-aot`;win10-x86-aot`"
-      env:
-        Configuration: ${{ matrix.configuration }}
-        Platform: ${{ matrix.platform }}
+    - name: build the application
+      run: msbuild $env:Solution_Name /p:Platform="Any CPU"
 
     # Create the app package by building and packaging the Windows Application Packaging project
     # - name: Create the app package
